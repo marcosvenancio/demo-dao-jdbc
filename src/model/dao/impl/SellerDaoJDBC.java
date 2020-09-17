@@ -94,8 +94,21 @@ public class SellerDaoJDBC implements SellerDao {
 
 	@Override
 	public void deleteById(Integer id) {
-		// TODO Auto-generated method stub
 		
+		PreparedStatement st = null;
+		try {
+			st = conn.prepareStatement("DELETE FROM seller WHERE Id = ?");
+
+			st.setInt(1, id);
+
+			st.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeStatement(st);
+		}
 	}
 
 	@Override
@@ -126,9 +139,9 @@ public class SellerDaoJDBC implements SellerDao {
 			DB.closeResultSet(rs);
 		}
 	}
-	// neste momento instancia-se o Departamento e o vendedor e 'seta' o valores deles - associando c/ o banco
 		
 	private Seller instantiateSeller(ResultSet rs, Department dep) throws SQLException {
+		// neste momento instancia-se o Departamento e o vendedor e 'seta' o valores deles - associando c/ o banco
 		Seller obj = new Seller();
 		obj.setId(rs.getInt("Id"));
 		obj.setName(rs.getString("Name"));
